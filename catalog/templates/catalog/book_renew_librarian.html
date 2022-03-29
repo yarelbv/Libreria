@@ -1,0 +1,25 @@
+{% extends "base_generic.html" %}
+{% block content %}
+
+    <h1>Renovar: {{bookinst.book.title}}</h1>
+    <p>Prestatario: {{bookinst.borrower}}</p>
+    <p>{% if bookinst.is_overdue %} class="text-danger"{% endif %}>Fecha de vencimiento: {{bookinst.due_back}}</p>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+        {{ form }}
+        </table>
+        <input type="submit" value="Actualizar" />
+    </form>
+
+    <tr>
+        <th><label for="id_renewal_date">Fecha de renovación:</label></th>
+        <td>
+          <input id="id_renewal_date" name="renewal_date" type="text" value="2016-11-08" required />
+          <br />
+          <span class="helptext">Ingrese la fecha entre ahora y 4 semanas (predeterminado 3 semanas).</span>
+        </td>
+      </tr>
+
+{% endblock %}

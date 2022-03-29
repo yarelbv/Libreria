@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>Inicio de la Biblioteca</h1>
+
+  <p>Bienvenido a <em>La Biblioteca</em>, un sitio muy basico desarrollado con Django</p>
+
+<h2>Contenido Dinámico Disponible</h2>
+
+  <p>La biblioteca tiene los siguientes recuentos de registros</p>
+  <ul>
+    <li><strong>Libros:</strong> {{ num_books }}</li>
+    <li><strong>Copias:</strong> {{ num_instances }}</li>
+    <li><strong>Copias Disponibles:</strong> {{ num_instances_available }}</li>
+    <li><strong>Autores:</strong> {{ num_authors }}</li>
+  </ul>
+  <p>Has visitado esta pagina {{ num_visits }} veces{{ num_visits|pluralize }}.</p>
+{% endblock %}

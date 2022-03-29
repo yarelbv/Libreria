@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  {% block title %}<title>Librería</title>{% endblock %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"></script>
+
+  <!-- Add additional CSS in static file -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="col-sm-2">
+      {% block sidebar %}
+      <ul class="sidebar-nav">
+          <li><a href="{% url 'index' %}">Inicio</a></li>
+          <li><a href="{% url 'books' %}">Todos los Libros</a></li>
+          <li><a href="{% url 'authors' %}">Autores</a></li>
+      </ul>
+
+      <ul class="sidebar-nav">
+        {% if user.is_authenticated %}
+          <li>Usuario: {{ user.get_username }}</li>
+          <li><a href="{% url 'my-borrowed' %}">Mi Prestado</a></li>
+          <li><a href="{% url 'logout'%}?next={{request.path}}">Salir</a></li>
+        {% else %}
+          <li><a href="{% url 'login'%}?next={{request.path}}">Ingresar</a></li>
+        {% endif %}
+      </ul>
+
+      {% if user.is_staff %}
+      <hr />
+      <ul class="sidebar-nav">
+      <li>Control de Autor</li>
+      {% if perms.catalog.can_mark_returned %}
+      <li><a href="{% url 'author_create' %}">Añadir Autor</a></li>
+      {% endif %}
+      </ul>
+      {% endif %}
+
+      {% if user.is_staff %}
+      <hr />
+      <ul class="sidebar-nav">
+      <li>Control de Libros</li>
+      {% if perms.catalog.can_mark_returned %}
+      <li><a href="{% url 'book_create' %}">Agregar Libro</a></li>
+      {% endif %}
+      </ul>
+      {% endif %}
+
+      {% if user.is_staff %}
+      <hr />
+      <ul class="sidebar-nav">
+      <li>Control de Prestamos</li>
+      {% if perms.catalog.can_mark_returned %}
+      <li><a href="{% url 'all-borrowed' %}">Todo lo Prestado</a></li>
+      {% endif %}
+      </ul>
+      {% endif %}
+      
+     {% endblock %}
+      </div>
+      <div class="col-sm-10 ">
+        {% block content %}{% endblock %}
+        {% block pagination %}
+          {% if is_paginated %}
+              <div class="pagination">
+                  <span class="page-links">
+                      {% if page_obj.has_previous %}
+                          <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">Pag. Anterior</a>
+                      {% endif %}
+                      <span class="page-current">
+                          Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                      </span>
+                      {% if page_obj.has_next %}
+                          <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">Pag. Siguiente</a>
+                      {% endif %}
+                  </span>
+              </div>
+          {% endif %}
+        {% endblock %} 
+      </div>
+    </div>
+  </div>
+</body>
+</html>
